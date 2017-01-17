@@ -3,9 +3,19 @@
 . /etc/sysconfig/heat-params
 
 if [ -n "${INSECURE_REGISTRY_URL}" ]; then
-    HYPERKUBE_IMAGE="${INSECURE_REGISTRY_URL}/google_containers/hyperkube:${KUBE_VERSION}"
+    if [ $(uname -p) = "ppc64le" ]; then
+        HYPERKUBE_IMAGE="${INSECURE_REGISTRY_URL}/google_containers/hyperkube-ppc64le:${KUBE_VERSION}"
+    fi
+    if [ $(uname -p) = "x86_64" ]; then
+        HYPERKUBE_IMAGE="${INSECURE_REGISTRY_URL}/google_containers/hyperkube:${KUBE_VERSION}"
+    fi
 else
-    HYPERKUBE_IMAGE="gcr.io/google_containers/hyperkube:${KUBE_VERSION}"
+    if [ $(uname -p) = "ppc64le" ]; then
+        HYPERKUBE_IMAGE="gcr.io/google_containers/hyperkube-ppc64le:${KUBE_VERSION}"
+    fi
+    if [ $(uname -p) = "x86_64" ]; then
+        HYPERKUBE_IMAGE="gcr.io/google_containers/hyperkube:${KUBE_VERSION}"
+    fi
 fi
 
 init_templates () {

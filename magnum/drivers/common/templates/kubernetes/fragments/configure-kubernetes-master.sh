@@ -47,7 +47,13 @@ sed -i '
 KUBELET_ARGS="--register-node=true --register-schedulable=false --config=/etc/kubernetes/manifests --hostname-override=$KUBE_NODE_IP"
 
 if [ -n "${INSECURE_REGISTRY_URL}" ]; then
-    KUBELET_ARGS="${KUBELET_ARGS} --pod-infra-container-image=${INSECURE_REGISTRY_URL}/google_containers/pause\:0.8.0"
+    if [ $(uname -p) = "ppc64le" ]; then
+        KUBELET_ARGS="${KUBELET_ARGS} --pod-infra-container-image=${INSECURE_REGISTRY_URL}/google_containers/pause-ppc64le\:2.0"
+    fi
+    if [ $(uname -p) = "x86_64" ]; then
+        KUBELET_ARGS="${KUBELET_ARGS} --pod-infra-container-image=${INSECURE_REGISTRY_URL}/google_containers/pause\:0.8.0"
+    fi
+
     echo "INSECURE_REGISTRY='--insecure-registry ${INSECURE_REGISTRY_URL}'" >> /etc/sysconfig/docker
 fi
 
